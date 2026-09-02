@@ -1,0 +1,414 @@
+/* ============================================================
+   KAENOODLE — shared stylesheet
+   Loaded by every page. Edit here once, changes everywhere.
+
+   Contents
+     1. Tokens          — colours, type, spacing
+     2. Colourways      — per-page accent, set by a class on <body>
+     3. Reset & base
+     4. Nav
+     5. Intro (the swatch panel at the top of every page)
+     6. Components      — cards, buttons, gallery, list rows
+     7. Footer
+     8. Motion & accessibility
+     9. Responsive
+   ============================================================ */
+
+/* ---------- 1. TOKENS -------------------------------------- */
+:root {
+  /* Surfaces and ink. Pure black is deliberate — swatch cards
+     are printed, not screen-designed, so no tinted near-blacks. */
+  --paper:      #ffffff;
+  --card:       #f3f1ec;
+  --ink:        #000000;
+  --muted:      #565656;
+
+  /* Overridden per page in section 2. */
+  --accent:     #ff5a13;
+  --on-accent:  #000000;
+
+  /* Type. Bahnschrift ships with Windows only, so Barlow Semi
+     Condensed is pulled from Google Fonts as the fallback for
+     everyone else. Both descend from DIN 1451, so the shapes
+     stay close. The wdth axis narrows Bahnschrift to match
+     Barlow's width; non-variable fonts ignore it. */
+  --font-display: "Bahnschrift", "DIN Alternate", "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+  --font-body:    "Instrument Sans", system-ui, -apple-system, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0:  1.0625rem;
+  --step-1:  1.375rem;
+  --step-2:  clamp(1.75rem, 3vw, 2.25rem);
+  --step-3:  clamp(2.25rem, 5vw, 3.25rem);
+  --step-4:  clamp(3rem, 9vw, 6rem);
+
+  --rule:   2px;
+  --radius: 4px;
+  --gap:    clamp(1.5rem, 4vw, 3rem);
+  --shell:  1180px;
+}
+
+/* ---------- 2. COLOURWAYS ---------------------------------- */
+/* Each page sets one of these on <body>. The colour is
+   wayfinding: it tells you which part of the site you're in
+   before you've read the heading. */
+body.cw-home        { --accent:#ff5a13; --on-accent:#000000; }
+body.cw-projects    { --accent:#1f4fe0; --on-accent:#ffffff; }
+body.cw-fursuits    { --accent:#ff3b8e; --on-accent:#000000; }
+body.cw-art         { --accent:#b6e400; --on-accent:#000000; }
+body.cw-about       { --accent:#00a79b; --on-accent:#000000; }
+body.cw-commissions { --accent:#ffc400; --on-accent:#000000; }
+body.cw-contact     { --accent:#7b4dff; --on-accent:#ffffff; }
+
+/* ---------- 3. RESET & BASE -------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 85;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0 0 1em; max-width: 62ch; }
+
+a { color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .75rem 1rem;
+  z-index: 100;
+}
+.skip:focus { left: 1rem; top: 1rem; }
+
+/* The swatch code. Set in the display face rather than a
+   monospace, because DIN is the typeface of technical
+   labelling — it belongs on a product code. */
+.code {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 85;
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---------- 4. NAV ----------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper);
+  border-bottom: var(--rule) solid var(--ink);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 64px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 85;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+
+/* The little colour square beside the wordmark picks up the
+   current page's accent, so the nav shows where you are too. */
+.wordmark::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: var(--rule) solid var(--ink);
+  border-radius: 2px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(.75rem, 2vw, 1.75rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 85;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  padding: .35rem 0;
+  border-bottom: 3px solid transparent;
+}
+.nav-links a:hover { border-bottom-color: var(--ink); }
+
+/* aria-current is set in the markup of each page, so the
+   active state is real HTML semantics, not just a CSS class. */
+.nav-links a[aria-current="page"] { border-bottom-color: var(--accent); }
+
+.nav-toggle {
+  display: none;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  background: var(--paper);
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--radius);
+  padding: .45rem .8rem;
+  cursor: pointer;
+}
+
+/* ---------- 5. INTRO --------------------------------------- */
+/* The signature block. A physical fur swatch card: solid colour
+   sample, punched hole, printed code along the bottom. */
+.intro {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) 1fr;
+  gap: var(--gap);
+  align-items: end;
+  padding-block: clamp(2.5rem, 7vw, 5rem) clamp(2rem, 5vw, 3.5rem);
+  border-bottom: var(--rule) solid var(--ink);
+}
+
+.swatch {
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
+}
+
+.swatch-sample {
+  background: var(--accent);
+  aspect-ratio: 4 / 3;
+  border-bottom: var(--rule) solid var(--ink);
+  position: relative;
+}
+
+/* Punched hole, top-left, like a card on a ring binder. */
+.swatch-sample::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: var(--rule) solid var(--ink);
+}
+
+.swatch-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .5rem;
+  padding: .6rem .75rem;
+}
+
+.intro-title { font-size: var(--step-4); font-weight: 700; }
+
+.intro-text {
+  font-size: var(--step-1);
+  color: var(--muted);
+  margin: 1rem 0 1.5rem;
+  max-width: 46ch;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+/* ---------- 6. COMPONENTS ---------------------------------- */
+.btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 85;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  padding: .7rem 1.4rem;
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--paper);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.btn-fill { background: var(--accent); color: var(--on-accent); }
+
+.section { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.section + .section { border-top: var(--rule) solid var(--ink); }
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.section-head h2 { font-size: var(--step-2); font-weight: 700; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: var(--gap);
+}
+
+.card {
+  border: var(--rule) solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.card-shot {
+  aspect-ratio: 4 / 3;
+  background: var(--card);
+  border-bottom: var(--rule) solid var(--ink);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: var(--step--1);
+  overflow: hidden;
+}
+.card-shot img { width: 100%; height: 100%; object-fit: cover; }
+
+.card-body { padding: 1.1rem 1.25rem 1.4rem; }
+.card-body h3 { font-size: var(--step-1); font-weight: 700; margin-bottom: .5rem; }
+.card-body p { font-size: var(--step--1); color: var(--muted); margin: 0; }
+
+.tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .9rem; }
+.tag {
+  font-size: 0.8125rem;
+  padding: .15rem .55rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+/* Price / spec rows, used on the commissions page. */
+.rows { border-top: var(--rule) solid var(--ink); }
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--ink);
+}
+.row h3 { font-size: var(--step-1); font-weight: 700; }
+.row p { margin: .35rem 0 0; font-size: var(--step--1); color: var(--muted); }
+.row-price { font-family: var(--font-display); font-size: var(--step-1); white-space: nowrap; }
+
+.prose { max-width: 62ch; }
+.prose h3 { font-size: var(--step-1); font-weight: 700; margin-top: 2rem; }
+
+/* ---------- 7. FOOTER -------------------------------------- */
+.footer {
+  border-top: var(--rule) solid var(--ink);
+  padding-block: 2rem 3rem;
+  font-size: var(--step--1);
+}
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+/* ---------- 8. MOTION & ACCESSIBILITY ---------------------- */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* One orchestrated moment: the intro assembles on page load.
+   Nothing else on the page animates on arrival. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.intro > * { animation: rise .5s cubic-bezier(.2,.7,.3,1) backwards; }
+.intro > *:nth-child(1) { animation-delay: .05s; }
+.intro > *:nth-child(2) { animation-delay: .15s; }
+
+/* Long galleries reveal as you reach them — see js/main.js. */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity .45s ease, transform .45s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .btn:hover { transform: none; }
+}
+
+/* ---------- 9. RESPONSIVE ---------------------------------- */
+@media (max-width: 860px) {
+  .nav-toggle { display: block; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    background: var(--paper);
+    border-bottom: var(--rule) solid var(--ink);
+    padding: .5rem 0;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li { width: 100%; }
+  .nav-links a {
+    display: block;
+    width: 100%;
+    padding: .75rem clamp(1.25rem, 4vw, 2.5rem);
+    border-bottom: none;
+    border-left: 4px solid transparent;
+  }
+  .nav-links a[aria-current="page"] { border-left-color: var(--accent); border-bottom-color: transparent; }
+  .nav-links a:hover { border-bottom-color: transparent; background: var(--card); }
+
+  .nav-inner { position: relative; }
+
+  .intro { grid-template-columns: 1fr; align-items: start; }
+  .swatch { max-width: 220px; }
+}

@@ -1,0 +1,18 @@
+{
+  "routes": [
+    { "route": "/projects",    "rewrite": "/projects.html" },
+    { "route": "/fursuits",    "rewrite": "/fursuits.html" },
+    { "route": "/art",         "rewrite": "/art.html" },
+    { "route": "/about",       "rewrite": "/about.html" },
+    { "route": "/commissions", "rewrite": "/commissions.html" },
+    { "route": "/contact",     "rewrite": "/contact.html" }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/css/*", "/js/*", "/images/*"]
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  }
+}
