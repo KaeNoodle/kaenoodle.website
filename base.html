@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+
+<!-- Runs before first paint. If scripting is off this never fires,
+     .no-js stays, and the reveal animations are skipped entirely. -->
+<script>document.documentElement.classList.remove('no-js');</script>
+</head>
+
+<!-- The colourway class is what gives each page its own accent colour.
+     It is set once, here, and every var(--accent) below inherits it. -->
+<body class="{{colourway_class}}">
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="swatchbar">
+  <div class="wrap swatchbar-inner">
+    <a class="mark" href="/">KAE<span>.</span></a>
+    <nav aria-label="Sections">
+      <ul class="chips">
+{{nav}}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+{{content}}
+</main>
+
+<footer class="wrap site-footer">
+  <span>&copy; <span id="year">2026</span> Kae</span>
+  <span>Built by hand. No template.</span>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
